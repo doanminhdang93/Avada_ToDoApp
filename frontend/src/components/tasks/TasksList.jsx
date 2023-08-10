@@ -27,10 +27,6 @@ const TasksList = () => {
 
   const addNewTask = async (e) => {
     e.preventDefault();
-    if (newTask.length <= 0) {
-      alert("Task is empty!");
-      return;
-    }
     try {
       const { data } = await axios.post(`${server}/task`, {
         name: newTask,
@@ -68,6 +64,7 @@ const TasksList = () => {
           placeholder="Enter new task..."
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
+          required
         />
         <button>
           <AiOutlinePlus className="plus" size={30}></AiOutlinePlus>
@@ -97,7 +94,7 @@ const TasksList = () => {
         <span>
           You have <span className="pendingTasks">{taskList.length}</span> tasks
         </span>
-        <button onClick={deleteAllTasks}>Clear All</button>
+        <button onClick={deleteAllTasks} className={`${taskList.length === 0 && "disabled-button"}`}>Clear All</button>
       </div>
     </>
   );

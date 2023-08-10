@@ -125,4 +125,8 @@ h2 {
   .footer button:hover {
     background-color: #6586d3;
   }
+  .footer .disabled-button {
+    pointer-events: none;
+    opacity: .65;
+  }
   
