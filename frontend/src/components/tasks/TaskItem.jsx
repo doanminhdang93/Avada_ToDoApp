@@ -5,11 +5,9 @@ import { server } from '../../server';
 
 const TaskItem = ({task, deleteTask}) => {
   const [isCompleted, setIsCompleted] = useState(task.isCompleted);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleCheckboxClick = async () => {
     try {
-      setIsLoading(true);
       await axios.put(`${server}/task/${task.id}`, {
         isCompleted: !isCompleted,
         name: task.name,
@@ -17,9 +15,7 @@ const TaskItem = ({task, deleteTask}) => {
       setIsCompleted(!isCompleted);
     } catch (err) {
       console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
+    } 
   };
   return (
     <div className="single-item">
@@ -30,8 +26,7 @@ const TaskItem = ({task, deleteTask}) => {
         </span>
       </div>
       <div className="checkbox" onChange={handleCheckboxClick} role="checkbox" aria-checked>
-        <input type="checkbox" className="checkCompleted" checked={isCompleted} disabled={isLoading} readOnly tabIndex={-1}>
-          {/* <MdDoneOutline></MdDoneOutline> */}
+        <input type="checkbox" className="checkCompleted" checked={isCompleted} readOnly tabIndex={-1}>
         </input>
       </div>
     </div>
