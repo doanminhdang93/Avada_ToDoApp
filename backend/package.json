@@ -1,27 +1,22 @@
 {
   "name": "todoapp",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "dev": "nodemon lib/app.js",
-    "start": "npm run production && npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "production": "babel src --out-dir lib --copy-files --include-dotfiles",
-    "development": "babel src --out-dir lib --copy-files --source-maps --include-dotfiles",
-    "watch": "babel src --out-dir lib --copy-files --source-maps --include-dotfiles --watch --verbose"
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "src/"
-    ]
+    "dev": "nodemon app.js",
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
+    "http": "^0.0.1-security",
     "koa": "^2.14.2",
     "koa-body": "^6.0.1",
+    "koa-bodyparser": "^4.4.1",
+    "koa-cors": "^0.0.16",
     "koa-router": "^12.0.0",
     "yup": "^1.2.0"
   },
