@@ -2,61 +2,56 @@ const fs = require("fs");
 const todoList = require("./todoList.json");
 const path = require("path");
 
-const getTasks= () =>{
-  return todoList;
-}
+const writeIntoFile = (data) => {
+  return fs.writeFileSync(
+    path.join(__dirname, "todoList.json"),
+    JSON.stringify(data)
+  );
+};
 
-const getTask = (id) =>{
+const getTasks = () => {
+  return todoList;
+};
+
+const getTask = (id) => {
   const taskFound = todoList.find((task) => task.id === id);
   return taskFound;
-}
+};
 
-const addNewTask = (data) =>{
-  const newTask = {id: Math.floor(Math.random() * Date.now()).toString(36), createAt: Date.now(),isCompleted: false,...data};
+const addNewTask = (data) => {
+  const newTask = {
+    ...data,
+    id: Math.floor(Math.random() * Date.now()).toString(36),
+    createdAt: new Date(),
+    isCompleted: false,
+  };
   const todoListData = [newTask, ...todoList];
-  fs.writeFileSync(
-    path.join(__dirname, 'todoList.json'),
-    JSON.stringify(todoListData)
-  );
+  writeIntoFile(todoListData);
   return newTask;
-}
+};
 
-const updateTask= (id, data) =>{
-  const index = todoList.findIndex(
-    (item) => item.id === id
-  );
-  todoList[index] = {id: id, createdAt: Date.now(), ...data };
-  fs.writeFileSync(
-    path.join(__dirname, 'todoList.json'),
-    JSON.stringify(todoList)
-  );
+const updateTask = (id, data) => {
+  const index = todoList.findIndex((item) => item.id === id);
+  todoList[index] = { ...data, id: id, createdAt: new Date() };
+  writeIntoFile(todoList);
   return todoList[index];
-}
+};
 
-const deleteTask = (id) =>{
+const deleteTask = (id) => {
   const newTodoList = todoList.filter((item) => item.id !== id);
-  return fs.writeFileSync(
-    path.join(__dirname, 'todoList.json'),
-    JSON.stringify(newTodoList)
-  );
-}
+  writeIntoFile(newTodoList);
+};
 
-const deleteAllTasks = () =>{
+const deleteAllTasks = () => {
   const newTodoList = [];
-  return fs.writeFileSync(
-    path.join(__dirname, 'todoList.json'),
-    JSON.stringify(newTodoList)
-  );
-}
-
+  writeIntoFile(newTodoList);
+};
 
 module.exports = {
-    getTasks,
-    getTask,
-    addNewTask,
-    updateTask,
-    deleteTask,
-    deleteAllTasks,
-}
-
-
+  getTasks,
+  getTask,
+  addNewTask,
+  updateTask,
+  deleteTask,
+  deleteAllTasks,
+};

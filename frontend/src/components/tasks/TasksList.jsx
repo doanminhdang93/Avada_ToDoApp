@@ -31,8 +31,10 @@ const TasksList = () => {
       const { data } = await axios.post(`${server}/task`, {
         name: newTask,
       });
+
+      const newTasks = [{ ...data.data }, ...taskList];
+      setTaskList(newTasks);
       setNewTask("");
-      setTaskList([{ ...data.data }, ...taskList]);
     } catch (err) {
       console.log(err);
     }
@@ -65,6 +67,7 @@ const TasksList = () => {
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
           required
+          autoFocus
         />
         <button>
           <AiOutlinePlus className="plus" size={30}></AiOutlinePlus>
@@ -94,7 +97,12 @@ const TasksList = () => {
         <span>
           You have <span className="pendingTasks">{taskList.length}</span> tasks
         </span>
-        <button onClick={deleteAllTasks} className={`${taskList.length === 0 && "disabled-button"}`}>Clear All</button>
+        <button
+          onClick={deleteAllTasks}
+          className={`${taskList.length === 0 && "disabled-button"}`}
+        >
+          Clear All
+        </button>
       </div>
     </>
   );
