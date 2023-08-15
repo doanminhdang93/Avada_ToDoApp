@@ -1,13 +1,13 @@
 import "@shopify/polaris/dist/styles.css";
 import { AppProvider } from "@shopify/polaris";
 import AppLayout from "./layout/AppLayout";
-import TaskList from "./components/tasks/TaskList";
+import TasksList from "./components/tasks/TasksList";
 
 const App = () => {
   return (
     <AppProvider>
       <AppLayout>
-        <TaskList></TaskList>
+        <TasksList></TasksList>
       </AppLayout>
     </AppProvider>
   );

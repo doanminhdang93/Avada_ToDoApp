@@ -5,7 +5,7 @@ import axios from "axios";
 import TaskItem from "./TaskItem";
 import TaskModal from "./TaskModal";
 
-const TaskList = () => {
+const TasksList = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [taskList, setTaskList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -134,4 +134,4 @@ const TaskList = () => {
   );
 };
 
-export default TaskList;
+export default TasksList;
