@@ -1,11 +1,11 @@
 const Router = require("koa-router");
 const {
   handleAddTask,
-  handleDeleteTask,
   handleGetTasks,
   handleGetTask,
+  handleUpdateTasks,
   handleUpdateTask,
-  handleDeleteAllTasks,
+  handleDeleteTasks,
 } = require("../handlers/Task/taskHandlers");
 const { taskValidation } = require("../middleware/taskValidation.js");
 
@@ -18,8 +18,8 @@ const todoListRouter = new Router({
 todoListRouter.get("/tasks", handleGetTasks);
 todoListRouter.get("/task/:id", handleGetTask);
 todoListRouter.post("/task", taskValidation, handleAddTask);
+todoListRouter.put("/taskIds", taskValidation, handleUpdateTasks);
 todoListRouter.put("/task/:id", taskValidation, handleUpdateTask);
-todoListRouter.delete("/task/:id", handleDeleteTask);
-todoListRouter.delete("/tasks", handleDeleteAllTasks);
+todoListRouter.delete("/taskIds", handleDeleteTasks);
 
 module.exports = todoListRouter;

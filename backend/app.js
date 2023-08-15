@@ -7,7 +7,7 @@ const app = new Koa();
 
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
-app.use(koaBody());
+app.use(koaBody({ parsedMethods: ["PUT", "POST", "DELETE"] }));
 
 // todoList
 app.use(todoListRouter.routes());

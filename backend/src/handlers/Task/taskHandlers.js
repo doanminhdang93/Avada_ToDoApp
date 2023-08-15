@@ -2,33 +2,33 @@ const {
   getTasks,
   getTask,
   addNewTask,
+  updateTasks,
   updateTask,
-  deleteTask,
-  deleteAllTasks
+  deleteTasks,
 } = require("../../database/todoLists/todoListRepository");
 
 async function handleGetTask(ctx) {
-    try {
-      const { id } = ctx.params;
-      const currentTask = getTask(id);
-      if (currentTask) {
-        return (ctx.body = {
-          success: true,
-          data: currentTask,
-        });
-      }
-      ctx.status = 404;
+  try {
+    const { id } = ctx.params;
+    const currentTask = getTask(id);
+    if (currentTask) {
       return (ctx.body = {
-        success: false,
-        message: `Task Not Found with id: ${id}`,
-      });
-    } catch (error) {
-      return (ctx.body = {
-        success: false,
-        error: error.message,
+        success: true,
+        data: currentTask,
       });
     }
+    ctx.status = 404;
+    return (ctx.body = {
+      success: false,
+      message: `Task Not Found with id: ${id}`,
+    });
+  } catch (error) {
+    return (ctx.body = {
+      success: false,
+      error: error.message,
+    });
   }
+}
 
 async function handleGetTasks(ctx) {
   try {
@@ -83,14 +83,16 @@ async function handleUpdateTask(ctx) {
   }
 }
 
-async function handleDeleteTask(ctx) {
+async function handleUpdateTasks(ctx) {
   try {
-    const { id } = ctx.params;
-    deleteTask(id);
-    ctx.status = 200;
+    const { ids } = ctx.request.body;
+    console.log(ids);
+
+    const taskUpdated = updateTasks(ids);
+    ctx.status = 201;
     return (ctx.body = {
       success: true,
-      message: `Task with id: ${id} was deleted successfully`,
+      data: taskUpdated,
     });
   } catch (error) {
     return (ctx.body = {
@@ -100,13 +102,16 @@ async function handleDeleteTask(ctx) {
   }
 }
 
-async function handleDeleteAllTasks(ctx) {
+async function handleDeleteTasks(ctx) {
   try {
-    deleteAllTasks();
+    const { ids } = ctx.request.body;
+    console.log(ids);
+    deleteTasks(ids);
     ctx.status = 200;
     return (ctx.body = {
       success: true,
-      message: `All Tasks were deleted successfully`,
+      message: `Tasks were deleted successfully`,
+      taskIds: ids,
     });
   } catch (error) {
     return (ctx.body = {
@@ -120,7 +125,7 @@ module.exports = {
   handleGetTasks,
   handleGetTask,
   handleAddTask,
+  handleUpdateTasks,
   handleUpdateTask,
-  handleDeleteTask,
-  handleDeleteAllTasks
+  handleDeleteTasks,
 };

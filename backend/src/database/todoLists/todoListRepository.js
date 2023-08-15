@@ -37,13 +37,21 @@ const updateTask = (id, data) => {
   return todoList[index];
 };
 
-const deleteTask = (id) => {
-  const newTodoList = todoList.filter((item) => item.id !== id);
-  writeIntoFile(newTodoList);
+const updateTasks = (ids) => {
+  const newTasksList = todoList.map((task) => ({
+    ...task,
+    isCompleted: ids.includes(task.id) ? !task.isCompleted : task.isCompleted,
+  }));
+
+  writeIntoFile(newTasksList);
+
+  const updatedTasks = newTasksList.filter((task) => ids.includes(task.id));
+  return updatedTasks;
 };
 
-const deleteAllTasks = () => {
-  const newTodoList = [];
+const deleteTasks = (ids) => {
+  // console.log(ids);
+  const newTodoList = todoList.filter((item) => !ids.includes(item.id));
   writeIntoFile(newTodoList);
 };
 
@@ -52,6 +60,6 @@ module.exports = {
   getTask,
   addNewTask,
   updateTask,
-  deleteTask,
-  deleteAllTasks,
+  updateTasks,
+  deleteTasks,
 };

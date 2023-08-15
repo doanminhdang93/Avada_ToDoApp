@@ -1,10 +1,10 @@
-const { object, string, date } =  require('yup');
+const { object, string, date } = require("yup");
 
 async function taskValidation(ctx, next) {
   try {
     const data = ctx.request.body;
     let schema = object({
-      name: string().required(),
+      name: string(),
     });
     await schema.validate(data);
     next();
@@ -12,11 +12,11 @@ async function taskValidation(ctx, next) {
     ctx.status = 400;
     ctx.body = {
       success: false,
-      errors: error.message
+      errors: error.message,
     };
   }
 }
 
 module.exports = {
-    taskValidation,
-}
+  taskValidation,
+};

@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { AiOutlinePlus } from "react-icons/ai";
-import "../../styles/tasksStyles/tasksList.css";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { ResourceList, Page, Card, EmptyState } from "@shopify/polaris";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { server } from "../../server";
 import TaskItem from "./TaskItem";
+import TaskModal from "./TaskModal";
 
-const TasksList = () => {
+const TaskList = () => {
+  const [selectedItems, setSelectedItems] = useState([]);
   const [taskList, setTaskList] = useState([]);
-  const [newTask, setNewTask] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [active, setActive] = useState(false);
+
+  const server = process.env.REACT_APP_API_URL;
+
+  const toggleModal = () => {
+    setActive((active) => !active);
+  };
 
   const getTasks = async () => {
     try {
       const { data } = await axios.get(`${server}/tasks`);
-      // console.log(data);
       setTaskList(data.data);
       setIsLoading(false);
     } catch (err) {
@@ -25,87 +31,107 @@ const TasksList = () => {
     getTasks();
   }, []);
 
-  const addNewTask = async (e) => {
-    e.preventDefault();
+  const addNewTask = async (taskName) => {
     try {
       const { data } = await axios.post(`${server}/task`, {
-        name: newTask,
+        name: taskName,
       });
-
       const newTasks = [{ ...data.data }, ...taskList];
       setTaskList(newTasks);
-      setNewTask("");
+      toggleModal();
     } catch (err) {
       console.log(err);
     }
   };
 
-  const deleteTask = async (id) => {
+  const deleteTasks = async (ids) => {
     try {
-      await axios.delete(`${server}/task/${id}`);
-      setTaskList(taskList.filter((task) => task.id !== id));
+      await axios.delete(`${server}/taskIds`, {
+        data: { ids },
+      });
+      setTaskList((curTask) =>
+        curTask.filter((task) => !ids.includes(task.id))
+      );
     } catch (err) {
       console.log(err);
+    } finally {
+      setSelectedItems([]);
     }
   };
 
-  const deleteAllTasks = async () => {
+  const isCompletedTasks = async (ids) => {
     try {
-      await axios.delete(`${server}/tasks`);
-      setTaskList([]);
+      await axios.put(`${server}/taskIds`, {
+        ids,
+      });
+      setTaskList((curTask) =>
+        curTask.map((task) => {
+          if (!ids.includes(task.id)) return task;
+          return { ...task, isCompleted: !task.isCompleted };
+        })
+      );
     } catch (err) {
       console.log(err);
+    } finally {
+      setSelectedItems([]);
     }
+  };
+
+  const emptyStateMarkup = (
+    <EmptyState
+      heading="No task found!"
+      action={{ content: "Add new task!", onAction: toggleModal }}
+      image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+    ></EmptyState>
+  );
+
+  const resourceListMarkup = (
+    <Card>
+      <ResourceList
+        resourceName={{ singular: "task", plural: "tasks" }}
+        selectedItems={selectedItems}
+        onSelectionChange={setSelectedItems}
+        selectable
+        items={taskList}
+        emptyState={emptyStateMarkup}
+        loading={isLoading}
+        renderItem={(item) => (
+          <TaskItem
+            task={item}
+            onUpdateTasksState={isCompletedTasks}
+            onDelete={deleteTasks}
+          />
+        )}
+        promotedBulkActions={[
+          {
+            content: "Complete",
+            onAction: () => isCompletedTasks(selectedItems),
+          },
+          {
+            content: "Delete",
+            onAction: () => deleteTasks(selectedItems),
+          },
+        ]}
+      ></ResourceList>
+    </Card>
+  );
+
+  const primaryAction = {
+    content: "Create task",
+    onAction: () => {
+      toggleModal();
+    },
   };
   return (
-    <>
-      <h2>To Do App</h2>
-      <form className="inputField" onSubmit={addNewTask}>
-        <input
-          type="text"
-          placeholder="Enter new task..."
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          required
-          autoFocus
-        />
-        <button>
-          <AiOutlinePlus className="plus" size={30}></AiOutlinePlus>
-        </button>
-      </form>
-      <h4>Tasks List</h4>
-      {isLoading ? (
-        <div>Loading tasks ...</div>
-      ) : (
-        <div className="tasksList">
-          {taskList.length > 0 ? (
-            <>
-              {taskList.map((task) => (
-                <TaskItem
-                  key={task.id}
-                  task={task}
-                  deleteTask={deleteTask}
-                ></TaskItem>
-              ))}
-            </>
-          ) : (
-            <div>No task found!!!</div>
-          )}
-        </div>
-      )}
-      <div className="footer">
-        <span>
-          You have <span className="pendingTasks">{taskList.length}</span> tasks
-        </span>
-        <button
-          onClick={deleteAllTasks}
-          className={`${taskList.length === 0 && "disabled-button"}`}
-        >
-          Clear All
-        </button>
-      </div>
-    </>
+    <Page title="Tasks list" primaryAction={primaryAction}>
+      {resourceListMarkup}
+      <TaskModal
+        addNewTask={addNewTask}
+        active={active}
+        toggleModal={toggleModal}
+      />
+    </Page>
   );
 };
 
-export default TasksList;
+export default TaskList;

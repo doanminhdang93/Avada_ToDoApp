@@ -1,12 +1,16 @@
-import './styles/App.css';
-import TasksList from './components/tasks/TasksList';
+import "@shopify/polaris/dist/styles.css";
+import { AppProvider } from "@shopify/polaris";
+import AppLayout from "./layout/AppLayout";
+import TaskList from "./components/tasks/TaskList";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <TasksList />
-    </div>
+    <AppProvider>
+      <AppLayout>
+        <TaskList></TaskList>
+      </AppLayout>
+    </AppProvider>
   );
-}
+};
 
 export default App;
