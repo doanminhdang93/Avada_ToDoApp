@@ -99,13 +99,9 @@ async function handleUpdateTask(ctx) {
 async function handleUpdateTasks(ctx) {
   try {
     const { ids } = ctx.request.body;
-    const isUpdated = await updateTasks(ids);
-    if (!isUpdated) {
-      ctx.status = 404;
-      return (ctx.body = {
-        success: false,
-      });
-    }
+
+    await updateTasks(ids);
+
     ctx.status = 200;
     return (ctx.body = {
       success: true,
@@ -122,13 +118,9 @@ async function handleUpdateTasks(ctx) {
 async function handleDeleteTasks(ctx) {
   try {
     const { ids } = ctx.request.body;
-    const isDeleted = await deleteTasks(ids);
-    if (!isDeleted) {
-      ctx.status = 404;
-      return (ctx.body = {
-        success: false,
-      });
-    }
+
+    await deleteTasks(ids);
+
     ctx.status = 200;
     return (ctx.body = {
       success: true,

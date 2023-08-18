@@ -15,7 +15,6 @@ const getTasks = async () => {
   const allTasksRef = await db.collection("todoList").get();
   const response = allTasksRef.docs.map((doc) => getTaskListFromDoc(doc));
 
-  // console.log(response);
   return response;
 };
 
@@ -42,19 +41,20 @@ const updateTask = async (id, data) => {
   try {
     const doc = await docRef.get();
 
-    if (doc.exists) {
-      await docRef.update(data);
-
-      const updatedTaskSnapshot = await docRef.get();
-      const updatedTask = {
-        id: updatedTaskSnapshot.id,
-        ...updatedTaskSnapshot.data(),
-      };
-
-      return updatedTask;
-    } else {
+    if (!doc.exists) {
+      console.log(`Document with ID: ${id} does not exist in Firestore.`);
       throw new Error("ID not found!");
     }
+
+    await docRef.update(data);
+
+    const updatedTaskSnapshot = await docRef.get();
+    const updatedTask = {
+      id: updatedTaskSnapshot.id,
+      ...updatedTaskSnapshot.data(),
+    };
+
+    return updatedTask;
   } catch (error) {
     console.log(error);
     throw error;
@@ -68,29 +68,28 @@ const updateTasks = async (ids) => {
     const docRef = db.collection("todoList").doc(id);
     const docSnapshot = await docRef.get();
 
-    if (docSnapshot.exists) {
-      const taskData = docSnapshot.data();
-
-      const updatedTaskData = {
-        ...taskData,
-        isCompleted: !taskData.isCompleted,
-      };
-
-      batch.update(docRef, updatedTaskData);
-    } else {
+    if (!docSnapshot.exists) {
       console.log(`Document with ID: ${id} does not exist in Firestore.`);
       throw new Error("Ids not found!");
     }
+
+    const taskData = docSnapshot.data();
+
+    const updatedTaskData = {
+      ...taskData,
+      isCompleted: !taskData.isCompleted,
+    };
+
+    batch.update(docRef, updatedTaskData);
   });
 
   await Promise.all(updatePromises);
 
   try {
     await batch.commit();
-    return true;
   } catch (error) {
-    console.log("Error updating tasks:", error);
-    return false;
+    console.log("Error while updating tasks:", error);
+    throw new Error("Error while updating tasks:", error);
   }
 };
 
@@ -101,22 +100,21 @@ const deleteTasks = async (ids) => {
     const docRef = db.collection("todoList").doc(id);
     const docSnapshot = await docRef.get();
 
-    if (docSnapshot.exists) {
-      batch.delete(docRef);
-    } else {
+    if (!docSnapshot.exists) {
       console.log(`Document with ID: ${id} does not exist in Firestore.`);
       throw new Error("Ids not found!");
     }
+
+    batch.delete(docRef);
   });
 
   await Promise.all(deletePromises);
 
   try {
     await batch.commit();
-    return true;
   } catch (error) {
-    console.log("Error deleting tasks:", error);
-    return false;
+    console.log("Error while deleting tasks:", error);
+    throw new Error("Error while deleting tasks:", error);
   }
 };
 
