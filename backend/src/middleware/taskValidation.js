@@ -1,6 +1,6 @@
 const { object, string, date } = require("yup");
 
-async function taskValidation(ctx, next) {
+const taskValidation = async (ctx, next) => {
   try {
     const data = ctx.request.body;
     let schema = object({
@@ -15,7 +15,7 @@ async function taskValidation(ctx, next) {
       errors: error.message,
     };
   }
-}
+};
 
 module.exports = {
   taskValidation,

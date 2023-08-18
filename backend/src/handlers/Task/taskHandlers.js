@@ -7,7 +7,7 @@ const {
   deleteTasks,
 } = require("../../database/todoLists/todoListRepository");
 
-async function handleGetTask(ctx) {
+const handleGetTask = async (ctx) => {
   try {
     const { id } = ctx.params;
     const currentTask = await getTask(id);
@@ -28,9 +28,9 @@ async function handleGetTask(ctx) {
       error: error.message,
     });
   }
-}
+};
 
-async function handleGetTasks(ctx) {
+const handleGetTasks = async (ctx) => {
   try {
     const allTasks = await getTasks();
     const allTasksWithoutCreatedAt = allTasks.map((obj) => {
@@ -52,9 +52,9 @@ async function handleGetTasks(ctx) {
       error: error.message,
     });
   }
-}
+};
 
-async function handleAddTask(ctx) {
+const handleAddTask = async (ctx) => {
   try {
     //const delay = (ms) => new Promise((res) => setTimeout(res, ms));
     const data = ctx.request.body;
@@ -75,9 +75,9 @@ async function handleAddTask(ctx) {
       error: error.message,
     });
   }
-}
+};
 
-async function handleUpdateTask(ctx) {
+const handleUpdateTask = async (ctx) => {
   try {
     const data = ctx.request.body;
 
@@ -94,9 +94,9 @@ async function handleUpdateTask(ctx) {
       error: error.message,
     });
   }
-}
+};
 
-async function handleUpdateTasks(ctx) {
+const handleUpdateTasks = async (ctx) => {
   try {
     const { ids } = ctx.request.body;
 
@@ -113,9 +113,9 @@ async function handleUpdateTasks(ctx) {
       error: error.message,
     });
   }
-}
+};
 
-async function handleDeleteTasks(ctx) {
+const handleDeleteTasks = async (ctx) => {
   try {
     const { ids } = ctx.request.body;
 
@@ -132,7 +132,7 @@ async function handleDeleteTasks(ctx) {
       error: error.message,
     });
   }
-}
+};
 
 module.exports = {
   handleGetTasks,
