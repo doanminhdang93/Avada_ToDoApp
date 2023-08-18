@@ -25,13 +25,17 @@ const getTask = async (id) => {
 };
 
 const addNewTask = async (data) => {
-  const newTask = {
+  const response = await db.collection("todoList").add({
     ...data,
     createdAt: new Date(),
     isCompleted: false,
+  });
+  return {
+    ...data,
+    createdAt: new Date(),
+    isCompleted: false,
+    id: response.id,
   };
-  const response = await db.collection("todoList").add(newTask);
-  return { ...newTask, id: response.id };
 };
 
 const updateTask = async (id, data) => {
