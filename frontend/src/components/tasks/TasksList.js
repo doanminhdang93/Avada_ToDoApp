@@ -1,5 +1,5 @@
 import { ResourceList, Page, Card } from "@shopify/polaris";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TaskItem from "./TaskItem";
 import TaskModal from "./TaskModal";
 import EmptyStateMarkup from "../config/emptyState/EmptyStateMarkup";
@@ -31,7 +31,7 @@ const TaskList = () => {
       setTaskList(newTaskList);
       toggleModal();
     } catch (err) {
-      alert("An error occurred while creating the new task!");
+      alert("An error has occurred while creating the new task!");
       console.log(err);
     } finally {
       setIsLoading(false);

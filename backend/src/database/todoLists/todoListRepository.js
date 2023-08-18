@@ -1,4 +1,3 @@
-const fs = require("fs");
 const todoList = require("./todoList.json");
 const path = require("path");
 const admin = require("firebase-admin");
@@ -13,7 +12,12 @@ const db = admin.firestore();
 
 const getTasks = async () => {
   const allTasksRef = await db.collection("todoList").get();
-  const response = allTasksRef.docs.map((doc) => getTaskListFromDoc(doc));
+  const response = allTasksRef.docs.map((doc) => {
+    return {
+      ...doc.data(),
+      id: doc.id,
+    };
+  });
 
   return response;
 };
