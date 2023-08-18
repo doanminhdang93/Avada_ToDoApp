@@ -7,7 +7,7 @@ async function taskValidation(ctx, next) {
       name: string(),
     });
     await schema.validate(data);
-    next();
+    await next();
   } catch (error) {
     ctx.status = 400;
     ctx.body = {

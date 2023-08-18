@@ -1,13 +1,24 @@
 import "@shopify/polaris/dist/styles.css";
 import { AppProvider } from "@shopify/polaris";
 import AppLayout from "./layout/AppLayout";
-import TasksList from "./components/tasks/TasksList";
+import TaskList from "./components/tasks/TasksList";
+import { logo } from "./config/theme";
 
 const App = () => {
+  const theme = {
+    logo: {
+      width: 124,
+      topBarSource: logo,
+      contextualSaveBarSource: logo,
+      url: "",
+      accessibilityLabel: "Logo",
+    },
+  };
+
   return (
-    <AppProvider>
+    <AppProvider theme={theme}>
       <AppLayout>
-        <TasksList></TasksList>
+        <TaskList></TaskList>
       </AppLayout>
     </AppProvider>
   );

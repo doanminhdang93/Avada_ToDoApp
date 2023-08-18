@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "avada-todoapp",
+  "private_key_id": "c73427d429b3bd8db05dc8c5daeab4e91fc2f172",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDXJ5lgK8zEoqf/\nYeX0esEH+Wq9mwCZ4yFH+d/Sfg65EFirGb/va4cKmEmghLNKSNzh+6qpzr8Zidz9\nEIjNI4gusBK59Lkuq26hgQbz+gPthGhrjXvlVw9GtjEmkmI+L4sQDbQrgRWW6XwK\n3P8fUgHabZNZSUwTcgO7kayjs2X3vJUia6dYGBUJTMEXf2fd0SoEMFk1r3nh+PmT\nLCy4d4lBoJlye7pWlDE0hDnxoptBwAxvYH2PiM3VoTcZAhV8cVCmi1BbFaCR/z8n\ndd32r24oq5xZ5LpY5BCLJStlATjom9hzBAc+p8PmIdbyqPQlBRokgB++u5FLTPXT\nYR6C/ZlXAgMBAAECggEAPyffFEVXIsNSSBtPGoAsCHC03fpRZ1quKsgU5N9e6AD9\n3h+9YQSxy7DfL/C0BlK0D9vFgXnwS4lV5q0DUyAief3ySUamUyY8X8kVpulVXNO4\nqRWLcEspb0rMy7M9hl6DVg+Huxt1oGpiIHg1pVZ3t8vhbFyhKbYWlWkSAa2H+XuG\ni2+bPele8NJXzdCf1LDG3zamtajtDtPn3zjOwD1ULCq7ahO6vl9LJjBzQXBBkdDh\nsgBwEp32bswbU59z/b2ndoVuntprAI6iy+Do/QaD5I59CNE336uag7YlgN8GfYih\nHu3YOigGIdm8y6FQJrm7v07r0StIFuoPrThwF0b1PQKBgQDs+BoYFW0+ZPdoLKkm\nzdut03HpPZiHhMnk9X6qNIHOsX4ZErTNhgPFeeoBxDVL4MbtvBPzTcW4Aqg/iQG4\nJ6V8JS4euq4+eDeo4GDQ+fsvG95zgj2hlaSs9L4ZxZeVkXquk5q+XNr4Zg/TwZJl\nrBGq1GXNnEkIIY8luIRq/NJ8JQKBgQDobwJTSLNiO79JEPGGjkVSWi0OQXwGwsJj\n4SFbdTG+/N7OUVmYJTfjBCMxUamopLwZVRnnllK18qnXBeMvzC5ckhDvKnlBw6H5\ny+MCnx7CZHwtLuRtf6jwva8J6uKGFwvjxNLbPimz9GDWKVXLwkhWBZDvJY2ozHR5\nlV/oUyQIywKBgQCHd1mrdOxLo/qPciCMz1gLKfpPpOfCaRXlrrXnZTbjyzHT8Y6s\ngzU6ufQdaGYzZ18xXrhk+YvTIqm+EHuMJBYFP1f7NysPCTiAcSzHqnB+wMbNb6H9\n8ob+XLckEoISfeUNUdI/iuOe5vGbU2h2eQRsjRlZjkNtw4mKvc3tP3SwhQKBgGK4\nO1maKC5RyAXFf3+xz3mRuU8zuvS4JY38YYmRtgYzKoKghJgdPqZZ7ISW9aMeDJIJ\n1g3Jh+mlXkNoSbzUUOCaXTznYkbvS01oLku/v3W67g7WushTDzLorX5d18Yx5afg\nwdnChj3bToHHXpxDMSvwA0W/QnJuHA5Dxk9LeKOPAoGAYO3yZ6NJVJioZhPzClz+\nUTwNmv0eHd4uJ3c8g+9ZzXWzEgnK/ajjOYC1Z7j83L+Q/ZLVfgTYTNaMcFtQpEYC\nRfczdmpImNs8WPa4jcCQeagomeW56Iq6p+NuNZgkuiFZjlsB6TrX6aowiu51jLC+\nJVPQ5Insb95p1jaSU0HY3UE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-k59gy@avada-todoapp.iam.gserviceaccount.com",
+  "client_id": "102869717636206105603",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-k59gy%40avada-todoapp.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

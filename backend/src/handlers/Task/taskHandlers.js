@@ -10,7 +10,7 @@ const {
 async function handleGetTask(ctx) {
   try {
     const { id } = ctx.params;
-    const currentTask = getTask(id);
+    const currentTask = await getTask(id);
     if (currentTask) {
       return (ctx.body = {
         success: true,
@@ -32,12 +32,18 @@ async function handleGetTask(ctx) {
 
 async function handleGetTasks(ctx) {
   try {
-    const queryParam = ctx.query;
-    const allTasks = getTasks(queryParam);
+    const allTasks = await getTasks();
+    const allTasksWithoutCreatedAt = allTasks.map((obj) => {
+      return {
+        id: obj.id,
+        name: obj.name,
+        isCompleted: obj.isCompleted,
+      };
+    });
     ctx.status = 200;
     return (ctx.body = {
       success: true,
-      data: allTasks,
+      data: allTasksWithoutCreatedAt,
     });
   } catch (error) {
     return (ctx.body = {
@@ -50,12 +56,18 @@ async function handleGetTasks(ctx) {
 
 async function handleAddTask(ctx) {
   try {
+    //const delay = (ms) => new Promise((res) => setTimeout(res, ms));
     const data = ctx.request.body;
-    const taskAdded = addNewTask(data);
+    //await delay(3000);
+    const taskAdded = await addNewTask(data);
     ctx.status = 201;
     return (ctx.body = {
       success: true,
-      data: taskAdded,
+      data: {
+        id: taskAdded.id,
+        name: taskAdded.name,
+        isCompleted: taskAdded.isCompleted,
+      },
     });
   } catch (error) {
     return (ctx.body = {
@@ -68,9 +80,10 @@ async function handleAddTask(ctx) {
 async function handleUpdateTask(ctx) {
   try {
     const data = ctx.request.body;
+
     const { id } = ctx.params;
-    const taskUpdated = updateTask(id, data);
-    ctx.status = 201;
+    const taskUpdated = await updateTask(id, data);
+    ctx.status = 200;
     return (ctx.body = {
       success: true,
       data: taskUpdated,
@@ -86,13 +99,17 @@ async function handleUpdateTask(ctx) {
 async function handleUpdateTasks(ctx) {
   try {
     const { ids } = ctx.request.body;
-    console.log(ids);
-
-    const taskUpdated = updateTasks(ids);
-    ctx.status = 201;
+    const isUpdated = await updateTasks(ids);
+    if (!isUpdated) {
+      ctx.status = 404;
+      return (ctx.body = {
+        success: false,
+      });
+    }
+    ctx.status = 200;
     return (ctx.body = {
       success: true,
-      data: taskUpdated,
+      message: "Tasks were updated successfully!",
     });
   } catch (error) {
     return (ctx.body = {
@@ -105,13 +122,17 @@ async function handleUpdateTasks(ctx) {
 async function handleDeleteTasks(ctx) {
   try {
     const { ids } = ctx.request.body;
-    console.log(ids);
-    deleteTasks(ids);
+    const isDeleted = await deleteTasks(ids);
+    if (!isDeleted) {
+      ctx.status = 404;
+      return (ctx.body = {
+        success: false,
+      });
+    }
     ctx.status = 200;
     return (ctx.body = {
       success: true,
-      message: `Tasks were deleted successfully`,
-      taskIds: ids,
+      message: `Tasks were deleted successfully!`,
     });
   } catch (error) {
     return (ctx.body = {

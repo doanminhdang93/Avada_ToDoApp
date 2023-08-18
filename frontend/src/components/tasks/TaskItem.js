@@ -7,38 +7,34 @@ import {
   TextContainer,
 } from "@shopify/polaris";
 import { useState } from "react";
-
 const TaskItem = ({ task, onDelete, onUpdateTasksState }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const { id, name, isCompleted } = task;
   const status = isCompleted ? "success" : "";
   const badgeTitle = isCompleted ? "Done" : "Pending";
+  const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const updateTasksStateHandler = async () => {
-    setIsLoading(true);
+    setUpdatingStatus(true);
     await onUpdateTasksState([id]);
-    setIsLoading(false);
+    setUpdatingStatus(false);
   };
 
   const deleteHandler = async () => {
-    setIsLoading(true);
+    setDeleting(true);
     await onDelete([id]);
-    setIsLoading(false);
+    setDeleting(false);
   };
   return (
-    <ResourceItem
-      persistActions
-      id={id}
-      accessibilityLabel={`View details for ${name}`}
-    >
+    <ResourceItem id={id} accessibilityLabel={`View details for ${name}`}>
       <Stack distribution="equalSpacing">
         <TextContainer>{name}</TextContainer>
         <ButtonGroup>
           <Badge status={status}>{badgeTitle}</Badge>
-          <Button onClick={updateTasksStateHandler} loading={isLoading}>
+          <Button onClick={updateTasksStateHandler} loading={updatingStatus}>
             {isCompleted ? "Not completed" : "Completed"}
           </Button>
-          <Button destructive onClick={deleteHandler} loading={isLoading}>
+          <Button destructive onClick={deleteHandler} loading={deleting}>
             Delete
           </Button>
         </ButtonGroup>

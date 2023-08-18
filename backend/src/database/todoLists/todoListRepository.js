@@ -1,58 +1,123 @@
 const fs = require("fs");
 const todoList = require("./todoList.json");
 const path = require("path");
+const admin = require("firebase-admin");
+const credentials = require("../../../key.json");
+const getTaskListFromDoc = require("../../helpers/getTaskListFromDoc");
 
-const writeIntoFile = (data) => {
-  return fs.writeFileSync(
-    path.join(__dirname, "todoList.json"),
-    JSON.stringify(data)
-  );
+admin.initializeApp({
+  credential: admin.credential.cert(credentials),
+});
+
+const db = admin.firestore();
+
+const getTasks = async () => {
+  const allTasksRef = await db.collection("todoList").get();
+  const response = allTasksRef.docs.map((doc) => getTaskListFromDoc(doc));
+
+  // console.log(response);
+  return response;
 };
 
-const getTasks = () => {
-  return todoList;
+const getTask = async (id) => {
+  const taskRef = db.collection("todoList").doc(id);
+  const response = await taskRef.get();
+
+  return response.data();
 };
 
-const getTask = (id) => {
-  const taskFound = todoList.find((task) => task.id === id);
-  return taskFound;
-};
-
-const addNewTask = (data) => {
+const addNewTask = async (data) => {
   const newTask = {
     ...data,
-    id: Math.floor(Math.random() * Date.now()).toString(36),
     createdAt: new Date(),
     isCompleted: false,
   };
-  const todoListData = [newTask, ...todoList];
-  writeIntoFile(todoListData);
-  return newTask;
+  const response = await db.collection("todoList").add(newTask);
+  return { ...newTask, id: response.id };
 };
 
-const updateTask = (id, data) => {
-  const index = todoList.findIndex((item) => item.id === id);
-  todoList[index] = { ...data, id: id, createdAt: new Date() };
-  writeIntoFile(todoList);
-  return todoList[index];
+const updateTask = async (id, data) => {
+  const docRef = db.collection("todoList").doc(id);
+
+  try {
+    const doc = await docRef.get();
+
+    if (doc.exists) {
+      await docRef.update(data);
+
+      const updatedTaskSnapshot = await docRef.get();
+      const updatedTask = {
+        id: updatedTaskSnapshot.id,
+        ...updatedTaskSnapshot.data(),
+      };
+
+      return updatedTask;
+    } else {
+      throw new Error("ID not found!");
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
-const updateTasks = (ids) => {
-  const newTasksList = todoList.map((task) => ({
-    ...task,
-    isCompleted: ids.includes(task.id) ? !task.isCompleted : task.isCompleted,
-  }));
+const updateTasks = async (ids) => {
+  const batch = db.batch();
 
-  writeIntoFile(newTasksList);
+  const updatePromises = ids.map(async (id) => {
+    const docRef = db.collection("todoList").doc(id);
+    const docSnapshot = await docRef.get();
 
-  const updatedTasks = newTasksList.filter((task) => ids.includes(task.id));
-  return updatedTasks;
+    if (docSnapshot.exists) {
+      const taskData = docSnapshot.data();
+
+      const updatedTaskData = {
+        ...taskData,
+        isCompleted: !taskData.isCompleted,
+      };
+
+      batch.update(docRef, updatedTaskData);
+    } else {
+      console.log(`Document with ID: ${id} does not exist in Firestore.`);
+      throw new Error("Ids not found!");
+    }
+  });
+
+  await Promise.all(updatePromises);
+
+  try {
+    await batch.commit();
+    return true;
+  } catch (error) {
+    console.log("Error updating tasks:", error);
+    return false;
+  }
 };
 
-const deleteTasks = (ids) => {
-  // console.log(ids);
-  const newTodoList = todoList.filter((item) => !ids.includes(item.id));
-  writeIntoFile(newTodoList);
+const deleteTasks = async (ids) => {
+  const batch = db.batch();
+
+  const deletePromises = ids.map(async (id) => {
+    const docRef = db.collection("todoList").doc(id);
+    const docSnapshot = await docRef.get();
+
+    if (docSnapshot.exists) {
+      batch.delete(docRef);
+    } else {
+      console.log(`Document with ID: ${id} does not exist in Firestore.`);
+      throw new Error("Ids not found!");
+    }
+  });
+
+  await Promise.all(deletePromises);
+
+  try {
+    await batch.commit();
+    return true;
+  } catch (error) {
+    console.log("Error deleting tasks:", error);
+    return false;
+  }
 };
 
 module.exports = {

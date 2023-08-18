@@ -18,8 +18,8 @@ const todoListRouter = new Router({
 todoListRouter.get("/tasks", handleGetTasks);
 todoListRouter.get("/task/:id", handleGetTask);
 todoListRouter.post("/task", taskValidation, handleAddTask);
-todoListRouter.put("/taskIds", taskValidation, handleUpdateTasks);
+todoListRouter.put("/tasks", taskValidation, handleUpdateTasks);
 todoListRouter.put("/task/:id", taskValidation, handleUpdateTask);
-todoListRouter.delete("/taskIds", handleDeleteTasks);
+todoListRouter.delete("/tasks", handleDeleteTasks);
 
 module.exports = todoListRouter;
