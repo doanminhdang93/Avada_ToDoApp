@@ -3,11 +3,11 @@ import axiosClient from "../API/axiosClient";
 
 const useUpdateStatus = () => {
   const [updatingStatus, setUpdatingStatus] = useState(false);
-  const updateStatusHandler = async (ids) => {
+  const updateStatusHandler = async (data) => {
     try {
       setUpdatingStatus(true);
       await axiosClient.put("/tasks", {
-        ids,
+        data,
       });
     } catch (err) {
       alert("An error has occurred while updating the status of the tasks");

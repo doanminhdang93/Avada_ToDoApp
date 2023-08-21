@@ -5,7 +5,7 @@ const {
   updateTasks,
   updateTask,
   deleteTasks,
-} = require("../../database/todoLists/todoListRepository");
+} = require("../database/repositories/todoListRepository");
 
 const handleGetTask = async (ctx) => {
   try {
@@ -99,9 +99,10 @@ const handleUpdateTask = async (ctx) => {
 
 const handleUpdateTasks = async (ctx) => {
   try {
-    const { ids } = ctx.request.body;
+    const { data } = ctx.request.body;
 
-    await updateTasks(ids);
+    // console.log(data);
+    await updateTasks(data);
 
     ctx.status = 200;
     return (ctx.body = {

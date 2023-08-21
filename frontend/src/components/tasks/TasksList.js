@@ -53,7 +53,15 @@ const TaskList = () => {
 
   const isCompletedTasks = async (ids) => {
     setIsLoading(true);
-    await updateStatusHandler(ids);
+    const data = {
+      taskList: taskList
+        .filter((task) => ids.includes(task.id))
+        .map((task) => ({
+          id: task.id,
+          taskData: { isCompleted: !task.isCompleted },
+        })),
+    };
+    await updateStatusHandler(data);
     setTaskList((curTask) =>
       curTask.map((task) => {
         if (!ids.includes(task.id)) return task;

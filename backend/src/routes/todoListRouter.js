@@ -6,7 +6,7 @@ const {
   handleUpdateTasks,
   handleUpdateTask,
   handleDeleteTasks,
-} = require("../handlers/Task/taskHandlers");
+} = require("../controllers/taskController");
 const { taskValidation } = require("../middleware/taskValidation.js");
 
 // Prefix all routes with /Tasks

@@ -40,16 +40,12 @@ const updateTask = async (id, data) => {
   await todoRef.doc(id).update(data);
 };
 
-const updateTasks = async (ids) => {
-  ids.forEach(async (id) => {
-    const taskDocRef = todoRef.doc(id);
-    const taskDoc = await taskDocRef.get();
-
-    if (taskDoc.exists) {
-      const taskData = taskDoc.data();
-      await taskDocRef.update({ isCompleted: !taskData.isCompleted });
-    }
-  });
+const updateTasks = async (data) => {
+  const tasks = data.taskList;
+  // console.log(data.taskList);
+  for (const task of tasks) {
+    await todoRef.doc(task.id).update(task.taskData);
+  }
 };
 
 const deleteTasks = async (ids) => {
