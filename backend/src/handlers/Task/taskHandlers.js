@@ -80,13 +80,14 @@ const handleAddTask = async (ctx) => {
 const handleUpdateTask = async (ctx) => {
   try {
     const data = ctx.request.body;
-
     const { id } = ctx.params;
-    const taskUpdated = await updateTask(id, data);
+
+    await updateTask(id, data);
+
     ctx.status = 200;
     return (ctx.body = {
       success: true,
-      data: taskUpdated,
+      message: "Task was updated successfully!",
     });
   } catch (error) {
     return (ctx.body = {
@@ -100,13 +101,12 @@ const handleUpdateTasks = async (ctx) => {
   try {
     const { ids } = ctx.request.body;
 
-    const updatedTaskData = await updateTasks(ids);
+    await updateTasks(ids);
 
     ctx.status = 200;
     return (ctx.body = {
       success: true,
       message: "Tasks were updated successfully!",
-      data: updatedTaskData,
     });
   } catch (error) {
     return (ctx.body = {

@@ -1,14 +1,16 @@
 const path = require("path");
 const admin = require("firebase-admin");
 const credentials = require("../../../key.json");
+
 admin.initializeApp({
   credential: admin.credential.cert(credentials),
 });
 
 const db = admin.firestore();
+const todoRef = db.collection("todoList");
 
 const getTasks = async () => {
-  const allTasksRef = await db.collection("todoList").get();
+  const allTasksRef = await todoRef.get();
   const response = allTasksRef.docs.map((doc) => {
     return {
       ...doc.data(),
@@ -20,64 +22,38 @@ const getTasks = async () => {
 };
 
 const getTask = async (id) => {
-  const taskRef = await db.collection("todoList").doc(id).get();
+  const taskRef = await todoRef.doc(id).get();
   return taskRef.data();
 };
 
 const addNewTask = async (data) => {
-  const response = await db.collection("todoList").add({
+  const newTask = {
     ...data,
     createdAt: new Date(),
     isCompleted: false,
-  });
-  return {
-    ...data,
-    createdAt: new Date(),
-    isCompleted: false,
-    id: response.id,
   };
+  const response = await todoRef.add(newTask);
+  return { ...newTask, id: response.id };
 };
 
 const updateTask = async (id, data) => {
-  const docRef = db.collection("todoList").doc(id);
-  await docRef.update(data);
-  const updatedTaskSnapshot = await docRef.get();
-  const updatedTask = {
-    ...updatedTaskSnapshot.data(),
-    id: updatedTaskSnapshot.id,
-  };
-
-  return updatedTask;
+  await todoRef.doc(id).update(data);
 };
 
 const updateTasks = async (ids) => {
-  const batch = db.batch();
+  ids.forEach(async (id) => {
+    const taskDocRef = todoRef.doc(id);
+    const taskDoc = await taskDocRef.get();
 
-  await Promise.all(
-    ids.map(async (id) => {
-      const docRef = db.collection("todoList").doc(id);
-      const docSnapshot = await docRef.get();
-
-      if (!docSnapshot.exists) {
-        console.log(`Document with ID: ${id} does not exist in Firestore.`);
-        return {};
-      }
-
-      const taskData = docSnapshot.data();
-
-      batch.update(docRef, {
-        isCompleted: !taskData.isCompleted,
-      });
-    })
-  );
-
-  await batch.commit();
+    if (taskDoc.exists) {
+      const taskData = taskDoc.data();
+      await taskDocRef.update({ isCompleted: !taskData.isCompleted });
+    }
+  });
 };
 
 const deleteTasks = async (ids) => {
-  await Promise.all(
-    ids.map((id) => db.collection("todoList").doc(id).delete())
-  );
+  await Promise.all(ids.map((id) => todoRef.doc(id).delete()));
 };
 
 module.exports = {
