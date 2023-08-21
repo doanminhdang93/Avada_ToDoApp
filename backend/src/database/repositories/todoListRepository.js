@@ -42,10 +42,9 @@ const updateTask = async (id, data) => {
 
 const updateTasks = async (data) => {
   const tasks = data.taskList;
-  // console.log(data.taskList);
-  for (const task of tasks) {
-    await todoRef.doc(task.id).update(task.taskData);
-  }
+  await Promise.all(
+    tasks.map((task) => todoRef.doc(task.id).update(task.taskData))
+  );
 };
 
 const deleteTasks = async (ids) => {
