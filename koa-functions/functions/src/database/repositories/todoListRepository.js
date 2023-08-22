@@ -6,7 +6,7 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
-const todoRef = db.collection("todoList");
+const todoRef = db.collection("taskList-test");
 
 const getTasks = async () => {
   const allTasksRef = await todoRef.get();
@@ -22,8 +22,7 @@ const getTasks = async () => {
 
 const getTask = async (id) => {
   const taskRef = await todoRef.doc(id).get();
-  console.log(taskRef);
-  return { ...taskRef.data(), id: id };
+  return taskRef.data();
 };
 
 const addNewTask = async (data) => {
